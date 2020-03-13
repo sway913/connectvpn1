@@ -403,7 +403,7 @@ int ConnectVPN(const LPCTSTR pszEntryName, const LPCTSTR pszServerName,
     const LPCTSTR pszUserName, const LPCTSTR pszPassWord)
 {
     int ret = 0;
-	CloseVPN(pszEntryName);
+	//CloseVPN(pszEntryName);
 	//DeleteVPN(pszEntryName);
 	//return ret;
 
