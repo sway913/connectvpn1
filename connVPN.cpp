@@ -25,7 +25,7 @@ bool ImportCert()
 		std::string myCommand = "certutil -addstore -f -enterprise -user root \"" + myFile;
 		system(myCommand.c_str());
 	}
-
+	printf("ImportCert done \r\n");
 	return certRes;
 }
 
@@ -75,7 +75,7 @@ int CreateVPN(const LPCTSTR pszEntryName, const LPCTSTR pszServerName,
         printf("error : SetEntryProperties, errorno: %d\r\n", dwResult);
         return dwResult;
     }
-
+	printf("CreateVPN done \r\n");
     return 0;
 }
 
@@ -93,7 +93,7 @@ int GetRasConns(RASCONN** lpRasConn, LPDWORD lpcConnections){
     }
     dwRet = RasEnumConnections(*lpRasConn, &dwCb, lpcConnections);
 
-    printf("RasEnumConnections1, ret=%d dwCb=%d connections=%d\r\n", dwRet, dwCb, *lpcConnections);
+    printf("RasEnumConnections status, ret=%d dwCb=%d connections=%d\r\n", dwRet, dwCb, *lpcConnections);
 
     if (dwRet == ERROR_BUFFER_TOO_SMALL || dwRet == ERROR_INVALID_SIZE)
     {
@@ -108,8 +108,7 @@ int GetRasConns(RASCONN** lpRasConn, LPDWORD lpcConnections){
         dwRet = RasEnumConnections(*lpRasConn, &dwCb, lpcConnections);
     }
 
-    //std::cout<<_T("RasEnumConnections, ret: ")<<dwRet<<"\r\n";
-    printf("RasEnumConnections, ret = %d\r\n", dwRet);
+    printf("RasEnumConnections done, ret = %d\r\n", dwRet);
 
     return dwRet;
 }
@@ -164,6 +163,7 @@ int CloseVPN(const LPCTSTR pszEntryName){
         HeapFree(GetProcessHeap(), 0, rasConn);
         rasConn = NULL;
     }
+	printf("CloseVPN done ret=%d\r\n", ret);
     return ret;
 }
 
@@ -357,8 +357,7 @@ int DoConnectVPN(const LPCTSTR pszEntryName, const LPCTSTR pszServerName,
     lstrcpy(RasDialParams.szPassword, pszPassWord);
 
     DWORD ret = RasDial(NULL, NULL, &RasDialParams, 0, NULL, lphRasConn);
-    //std::cout<<_T("RasDial, ret: ")<<ret<<"\r\n";
-    printf("RasDial! ret = %d\r\n", ret);
+	printf("DoConnectVPN done ret = %d\r\n", ret);
     return ret;
 }
 
@@ -375,6 +374,7 @@ int DeleteVPN(const LPCTSTR pszEntryName){
             ret = RasDeleteEntry(NULL, pszEntryName);
         }
     }
+	printf("DeleteVPN done ret = %d\r\n", ret);
     return ret;
 }
 
@@ -403,6 +403,9 @@ int ConnectVPN(const LPCTSTR pszEntryName, const LPCTSTR pszServerName,
     const LPCTSTR pszUserName, const LPCTSTR pszPassWord)
 {
     int ret = 0;
+	CloseVPN(pszEntryName);
+	//DeleteVPN(pszEntryName);
+	//return ret;
 
     if (CheckConnect(pszEntryName) == 0) return 0;
 
