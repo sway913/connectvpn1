@@ -8,6 +8,10 @@
 #include <iostream>
 
 
+inline bool is_exists(const std::string& name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
+}
 
 bool ImportCert()
 {
@@ -16,10 +20,11 @@ bool ImportCert()
 	GetModuleFileNameA(NULL, buffer, MAX_PATH);
 	std::string::size_type pos = std::string(buffer).find_last_of("\\/");
 	std::string myPath = std::string(buffer).substr(0, pos);
-	myPath = "C:\\Users\\Administrator\\Desktop\\windows_ikev2";
-	//std::string myCommand = "certutil -addstore -f -enterprise -user root \"" + myPath + "\\ca.cert.pem\"";
-	std::string myCommand = "certutil -addstore -f -enterprise -user root ca.cert.pem";
-	system(myCommand.c_str());
+	std::string myFile = myPath + "\\ca.cert.pem";
+	if (is_exists(myFile)) {
+		std::string myCommand = "certutil -addstore -f -enterprise -user root \"" + myFile;
+		system(myCommand.c_str());
+	}
 
 	return certRes;
 }
